@@ -57,7 +57,29 @@
     xwayland.enable = true;
   };
 
-  environment.sessionVariables.NIXOS_OZONE_WL = "1";
+  environment.sessionVariables = {
+    NIXOS_OZONE_WL = "1";
+    _JAVA_AWT_WM_NONREPARENTING = "1";
+    # Force sharp subpixel anti-aliasing for Java/JetBrains/Android Studio
+    _JAVA_OPTIONS = "-Dawt.useSystemAAFontSettings=lcd -Dswing.aatext=true";
+  };
+
+  # System fonts & fontconfig rendering
+  fonts = {
+    enableDefaultPackages = true;
+    packages = with pkgs; [
+      jetbrains-mono
+      noto-fonts
+      noto-fonts-color-emoji
+      nerd-fonts.jetbrains-mono
+    ];
+    fontconfig = {
+      enable = true;
+      antialias = true;
+      hinting.style = "slight";
+      subpixel.rgba = "rgb";
+    };
+  };
 
   nixpkgs.config.allowUnfree = true;
 
