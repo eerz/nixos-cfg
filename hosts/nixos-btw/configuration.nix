@@ -18,6 +18,38 @@
     extraGroups = [ "wheel" "networkmanager" "kvm" "dialout" ];
   };
 
+  # Enable modern OpenGL / Vulkan graphics
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true;
+  };
+
+  # Load NVIDIA driver and blacklist nouveau (essential for RTX 5070 Ti)
+  services.xserver.videoDrivers = [ "nvidia" ];
+
+  hardware.nvidia = {
+    modesetting.enable = true;
+
+    # REQUIRED for RTX 50-series (Blackwell)
+    open = true;
+
+    # Laptop dynamic power management
+    powerManagement.enable = true;
+    powerManagement.finegrained = true;
+
+    nvidiaSettings = true;
+
+    # Hybrid GPU routing (verified from your hardware)
+    prime = {
+      offload = {
+        enable = true;
+        enableOffloadCmd = true;
+      };
+      intelBusId = "PCI:0:2:0";
+      nvidiaBusId = "PCI:2:0:0";
+    };
+  };
+
   programs.nix-ld.enable = true;
 
   programs.hyprland = {
